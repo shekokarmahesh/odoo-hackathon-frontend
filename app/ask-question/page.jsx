@@ -1,6 +1,5 @@
 "use client";
 import Header from "@/components/Header";
-import RichTextEditor from "@/components/RichTextEditor";
 import React, { useRef, useState } from "react";
 
 const PostQuestionPage = () => {
