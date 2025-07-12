@@ -1,4 +1,5 @@
-
+"use client";
+import { useRouter } from "next/navigation";
 
 const QuestionCard = ({
   title,
@@ -7,8 +8,12 @@ const QuestionCard = ({
   userName,
   answerCount,
 }) => {
+  const router = useRouter();
   return (
-    <div className="bg-card border border-border rounded-lg p-6 hover:bg-question-hover transition-colors duration-200 cursor-pointer">
+    <div
+      className="bg-card border border-border rounded-lg p-6 hover:bg-question-hover transition-colors duration-200 cursor-pointer"
+      onClick={() => router.push(`/all-questions/1`)}
+    >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           {/* Question Title */}

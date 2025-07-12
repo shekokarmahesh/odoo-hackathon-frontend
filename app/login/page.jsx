@@ -1,4 +1,6 @@
 "use client";
+import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const LoginPage = () => {
@@ -11,6 +13,9 @@ const LoginPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const { login, signup } = useAuth();
+  const router = useRouter();
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -77,24 +82,21 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
       if (isLogin) {
-        console.log("Login attempt:", {
-          email: formData.email,
-          password: formData.password,
-        });
-        // Handle login logic here
-        alert("Login successful!");
+        await login(formData.email, formData.password);
+        router.push("/all-questions");
       } else {
-        console.log("Signup attempt:", {
-          name: formData.name,
+        // Signup API call
+        const signupData = {
           email: formData.email,
           password: formData.password,
-        });
-        // Handle signup logic here
-        alert("Account created successfully!");
+          firstName: formData.name || "",
+          lastName: formData.name || "",
+          username: formData.email.split("@")[0], // Generate username from email
+        };
+
+        await signup(signupData);
+        router.push("/all-questions");
       }
     } catch (error) {
       console.error("Authentication error:", error);

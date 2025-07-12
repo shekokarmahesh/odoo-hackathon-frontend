@@ -1,12 +1,28 @@
+"use client";
+import { useAuth } from "../context/AuthContext";
 import FilterDropdown from "./FilterDropdown";
+import { useRouter } from "next/navigation";
 
 const FilterBar = () => {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const handleAskQuestionClick = () => {
+    if (isAuthenticated) {
+      router.push("/ask-question");
+    } else {
+      router.push("/login");
+    }
+  };
+
   return (
     <div className="w-full bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           {/* Ask Question Button */}
-          <button className="btn btn btn-outline btn-primary text-primary-foreground font-medium px-6">
+          <button
+            className="btn btn btn-outline btn-primary text-primary-foreground font-medium px-6"
+            onClick={handleAskQuestionClick}
+          >
             Ask New question
           </button>
           {/* Filter Options */}
