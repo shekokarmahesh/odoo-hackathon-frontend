@@ -6,12 +6,10 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
+    extend: {},
   },
-  plugins: [],
+  daisyui: {
+    themes: ["light"], // This forces only the light theme
+  },
+  plugins: [require("daisyui")],
 };
