@@ -1,16 +1,11 @@
-"use client"
-import QuestionDetailsPage from '@/components/QuestionDetails';
+"use client";
+import React from "react";
 import { useParams } from "next/navigation";
-const page = () => {
+import QuestionDetailsPage from "../../../components/QuestionDetails";
+const Page = () => {
   const params = useParams();
-  const questionId = params['que-id'] ;
-  return (
-    <QuestionDetailsPage
-      que={[]}
-      ans={[]}
-      questionId={questionId}
-    />
-  );
-}
+  const questionId = params["que-id"];
+  return <QuestionDetailsPage que={[]} ans={[]} questionId={questionId} />;
+};
 
-export default page;
+export default Page;

@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
-import FilterBar from "@/components/FilterBar";
-import QuestionCard from "@/components/QuestionCard";
-import Pagination from "@/components/Pagination";
-import { sampleQuestions } from "@/data/sampleQue";
-import Header from "@/components/Header";
+import React, { useState } from "react";
+import FilterBar from "../../components/FilterBar";
+import QuestionCard from "../../components/QuestionCard";
+import Pagination from "../../components/Pagination";
+import { sampleQuestions } from "../../data/sampleQue";
+import Header from "../../components/Header";
 
-const page = () => {
+const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 5;
   const totalPages = Math.ceil(sampleQuestions.length / questionsPerPage);
@@ -53,4 +53,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
