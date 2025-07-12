@@ -1,6 +1,5 @@
 import "./globals.css";
 
-
 export const metadata = {
   title: "Stack It",
   description: "Ask questions and get answers from the commiunity",

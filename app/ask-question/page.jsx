@@ -1,6 +1,7 @@
 "use client";
 import Header from "@/components/Header";
-import React, { useState } from "react";
+import RichTextEditor from "@/components/RichTextEditor";
+import React, { useRef, useState } from "react";
 
 const PostQuestionPage = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,11 @@ const PostQuestionPage = () => {
   const [currentTag, setCurrentTag] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const editorRef = useRef();
+
+  const handleContentChange = (text) => {
+    console.log("Editor content:", text);
+  };
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -37,6 +43,7 @@ const PostQuestionPage = () => {
   };
 
   // Add tag
+  // Add tag
   const addTag = () => {
     const tag = currentTag.trim().toLowerCase();
     if (tag && !formData.tags.includes(tag) && formData.tags.length < 5) {
@@ -45,6 +52,13 @@ const PostQuestionPage = () => {
         tags: [...prev.tags, tag],
       }));
       setCurrentTag("");
+      // Clear tag error when a tag is successfully added
+      if (errors.tags) {
+        setErrors((prev) => ({
+          ...prev,
+          tags: "",
+        }));
+      }
     }
   };
 
@@ -110,6 +124,33 @@ const PostQuestionPage = () => {
     }
   };
 
+  // Handle tag input changes and clear tag errors
+  const handleTagInputChange = (e) => {
+    setCurrentTag(e.target.value);
+    // Clear tag error when user starts typing in tag input
+    if (errors.tags) {
+      setErrors((prev) => ({
+        ...prev,
+        tags: "",
+      }));
+    }
+  };
+
+  // Handle description changes (for your rich text editor)
+  const handleDescriptionChange = (content) => {
+    setFormData((prev) => ({
+      ...prev,
+      description: content,
+    }));
+    // Clear description error when user starts typing
+    if (errors.description) {
+      setErrors((prev) => ({
+        ...prev,
+        description: "",
+      }));
+    }
+  };
+
   return (
     <>
       <div className="sticky top-0 z-10 bg-white">
@@ -134,7 +175,7 @@ const PostQuestionPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title Field */}
                 <div className="form-control">
-                  <label className="label">
+                  <label className="label mb-2">
                     <span className="label-text text-lg font-semibold">
                       Title
                     </span>
@@ -154,65 +195,35 @@ const PostQuestionPage = () => {
                     }`}
                   />
                   {errors.title && (
-                    <label className="label">
+                    <label className="label mb-2">
                       <span className="label-text-alt text-error">
                         {errors.title}
                       </span>
                     </label>
                   )}
-                  <label className="label">
-                    <span className="label-text-alt text-base-content/50">
-                      Be specific and imagine you're asking a question to
-                      another person
-                    </span>
-                  </label>
                 </div>
 
                 {/* Description Field - Rich Text Editor Space */}
                 <div className="form-control">
-                  <label className="label">
+                  <label className="label mb-2">
                     <span className="label-text text-lg font-semibold">
                       Description
                     </span>
                   </label>
 
-                  {/* Rich Text Editor Container */}
-                  <div
-                    className={`min-h-[300px] border-2 rounded-lg p-4 bg-base-100 ${
-                      errors.description ? "border-error" : "border-base-300"
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    placeholder="Describe your question in detail. Include what you've tried, what you expected to happen, and what actually happened."
+                    rows={8}
+                    className={`textarea textarea-bordered w-full resize-y ${
+                      errors.description ? "textarea-error" : ""
                     }`}
-                  >
-                    {/* 
-                    RICH TEXT EDITOR GOES HERE
-                    Replace this div with your rich text editor component
-                    The container is styled and ready for integration
-                  */}
-                    <div className="text-base-content/50 italic">
-                      [Rich Text Editor will be integrated here]
-                      <br />
-                      <br />
-                      Include all the information someone would need to answer
-                      your question:
-                      <ul className="list-disc list-inside mt-2 space-y-1">
-                        <li>What you've tried so far</li>
-                        <li>What you expected to happen</li>
-                        <li>What actually happened</li>
-                        <li>Code samples (if applicable)</li>
-                      </ul>
-                    </div>
-
-                    {/* Hidden textarea for form validation - remove when implementing rich text editor */}
-                    <textarea
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="hidden"
-                      placeholder="Describe your question in detail..."
-                    />
-                  </div>
+                  />
 
                   {errors.description && (
-                    <label className="label">
+                    <label className="label mb-2">
                       <span className="label-text-alt text-error">
                         {errors.description}
                       </span>
@@ -222,12 +233,9 @@ const PostQuestionPage = () => {
 
                 {/* Tags Field */}
                 <div className="form-control">
-                  <label className="label">
+                  <label className="label mb-2">
                     <span className="label-text text-lg font-semibold">
-                      Tags
-                    </span>
-                    <span className="label-text-alt text-base-content/50">
-                      {formData.tags.length}/5 tags
+                      Add Tags
                     </span>
                   </label>
 
@@ -236,7 +244,7 @@ const PostQuestionPage = () => {
                     <input
                       type="text"
                       value={currentTag}
-                      onChange={(e) => setCurrentTag(e.target.value)}
+                      onChange={handleTagInputChange}
                       onKeyDown={handleTagInput}
                       placeholder="Add tags (press Enter or comma to add)"
                       className="input input-bordered flex-1"
@@ -284,18 +292,12 @@ const PostQuestionPage = () => {
                   </div>
 
                   {errors.tags && (
-                    <label className="label">
+                    <label className="label mb-2">
                       <span className="label-text-alt text-error">
                         {errors.tags}
                       </span>
                     </label>
                   )}
-
-                  <label className="label">
-                    <span className="label-text-alt text-base-content/50">
-                      Add up to 5 tags to describe what your question is about
-                    </span>
-                  </label>
                 </div>
 
                 {/* Action Buttons */}
